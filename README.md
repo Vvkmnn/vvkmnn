@@ -1,1 +1,1 @@
-✌️
+[✌️](https://vvkmnn.xyz/)

@@ -19,8 +19,9 @@
  * (org repos are hidden; ~1k commits short), so Actions only ADDS what it can see after
  * baseline_date: public commits authored by the user (commit search, default branches)
  * and the additions in them, skipping notebooks, lockfiles, minified files and SVGs (so
- * regenerated card assets never count as written code). Accepted gap: post-baseline
- * commits to private repos / non-default branches are not counted; --rebaseline re-anchors.
+ * regenerated card assets never count as written code), recorded in a ledger
+ * (data/increments.txt, see below). Accepted gap: post-baseline commits to private repos /
+ * non-default branches are not counted; --rebaseline re-anchors and empties the ledger.
  *
  * The ai column (data/ai.json) is a frozen snapshot; see ai.c for how it is built.
  *
@@ -143,7 +144,8 @@ static void npm(void) {
     int have_legacy = 0;
     for (size_t i = 0; objs && i < objs->n; i++) {
         const char *name = jstr(jpath(jat(objs, i), "package.name"));
-        have_legacy |= name && !strcmp(name, LEGACY_PACKAGE);
+        if (!name) continue;
+        have_legacy |= !strcmp(name, LEGACY_PACKAGE);
         add_package(name, day);
     }
     if (!have_legacy) add_package(LEGACY_PACKAGE, day); /* deprecated, so search omits it */
@@ -197,7 +199,8 @@ static void repos(void) {
     long stars = 0, forks = 0;
     for (size_t i = 0; i < nodes->n; i++) {
         const JVal *r = jat(nodes, i);
-        if (!strcmp(jstr(jget(r, "name")), EXCLUDED_REPO)) continue;
+        const char *rname = jstr(jget(r, "name"));
+        if (!rname || !strcmp(rname, EXCLUDED_REPO)) continue; /* malformed or paint */
         stars += (long)jnum(jget(r, "stargazerCount"), 0);
         forks += (long)jnum(jget(r, "forkCount"), 0);
         const JVal *ls = jpath(r, "languages.nodes");
@@ -205,6 +208,7 @@ static void repos(void) {
         int nseen = 0;
         for (size_t j = 0; ls && j < ls->n && nseen < 32; j++) {
             const char *name = jstr(jget(jat(ls, j), "name"));
+            if (!name) continue;
             if (!strcmp(name, "Jupyter Notebook")) name = "Python";
             if (is_markup(name)) continue;
             int dup = 0;
@@ -232,6 +236,7 @@ static void repos(void) {
 
 /* ------------------------------------------------------------------ commits + lines */
 static int skipped_file(const char *f) {
+    if (!f) return 1; /* malformed entry: count nothing */
     size_t n = strlen(f);
     const char *suffixes[] = { ".ipynb", "lock.json", ".lock", ".svg" };
     for (size_t i = 0; i < sizeof suffixes / sizeof *suffixes; i++) {
@@ -261,30 +266,90 @@ static Baseline read_baseline(void) {
     return b;
 }
 
+/*
+ * Ledger of post-baseline commits already counted: data/increments.txt, one line each:
+ *   YYYY-MM-DD SHA ADDITIONS
+ * Each run searches only from the newest ledger day (inclusive, deduped by SHA), oldest
+ * first, so it never approaches the search API's 1,000-result ceiling and makes only a
+ * handful of API calls per day. Totals = baseline + ledger.
+ *
+ * Flood guard: author: search trusts commit metadata, so anyone could push commits that
+ * claim this author. At most MAX_NEW_PER_RUN are added per run; the rest wait for the next
+ * run (oldest first, nothing lost) — a spoofing flood can't spike the card overnight.
+ */
+#define LEDGER "data/increments.txt"
+enum { MAX_LEDGER = 100000, MAX_NEW_PER_RUN = 200 };
+
+typedef struct { char date[11]; char sha[41]; long additions; } Entry;
+static Entry ledger[MAX_LEDGER];
+static int nledger;
+
+static void read_ledger(void) {
+    FILE *f = fopen(LEDGER, "r");
+    if (!f) return; /* first run: no ledger yet */
+    while (nledger < MAX_LEDGER && fscanf(f, "%10s %40s %ld", ledger[nledger].date, ledger[nledger].sha,
+                                          &ledger[nledger].additions) == 3)
+        nledger++;
+    fclose(f);
+}
+
+static int in_ledger(const char *sha) {
+    for (int i = 0; i < nledger; i++)
+        if (!strcmp(ledger[i].sha, sha)) return 1;
+    return 0;
+}
+
 static void commits_and_lines(void) {
     Baseline b = read_baseline();
+    read_ledger();
+    /* Resume from the newest counted day (inclusive; dedupe handles overlap), else after baseline. */
+    const char *since = b.date, *op = ">";
+    for (int i = 0; i < nledger; i++)
+        if (strcmp(ledger[i].date, since) >= 0) { since = ledger[i].date; op = ">="; }
+
     JVal pages;
     if (!jparse_all(run("gh api -X GET search/commits --paginate -f per_page=100 "
-                        "-f q='author:%s committer-date:>%s -repo:%s/%s'",
-                        USER_LOGIN, safe(b.date), USER_LOGIN, EXCLUDED_REPO), &pages))
+                        "-f sort=committer-date -f order=asc "
+                        "-f q='author:%s committer-date:%s%s -repo:%s/%s'",
+                        USER_LOGIN, op, safe(since), USER_LOGIN, EXCLUDED_REPO), &pages))
         die("invalid JSON from commit search");
-    long commits = 0, lines = 0;
-    for (size_t p = 0; p < pages.n; p++) {
+
+    int added = 0;
+    for (size_t p = 0; p < pages.n && added < MAX_NEW_PER_RUN; p++) {
         const JVal *items = jget(jat(&pages, p), "items");
-        for (size_t i = 0; items && i < items->n; i++) {
+        for (size_t i = 0; items && i < items->n && added < MAX_NEW_PER_RUN; i++) {
             const JVal *it = jat(items, i);
+            const char *sha = jstr(jget(it, "sha")), *repo = jstr(jpath(it, "repository.full_name"));
+            const char *when = jstr(jpath(it, "commit.committer.date"));
+            if (!sha || !repo || !when || strlen(sha) != 40 || strlen(when) < 10) continue; /* malformed */
+            if (in_ledger(sha)) continue;
+            if (nledger == MAX_LEDGER) die("ledger full");
             JVal c;
-            parse(run("gh api 'repos/%s/commits/%s'", safe(jstr(jpath(it, "repository.full_name"))),
-                      safe(jstr(jget(it, "sha")))), &c);
+            parse(run("gh api 'repos/%s/commits/%s'", safe(repo), safe(sha)), &c);
+            Entry *e = &ledger[nledger++];
+            memcpy(e->date, when, 10);
+            e->date[10] = '\0';
+            memcpy(e->sha, sha, 41);
+            e->additions = 0;
             const JVal *files = jget(&c, "files");
             for (size_t f = 0; files && f < files->n; f++) {
                 const JVal *file = jat(files, f);
-                if (!skipped_file(jstr(jget(file, "filename")))) lines += (long)jnum(jget(file, "additions"), 0);
+                if (!skipped_file(jstr(jget(file, "filename")))) e->additions += (long)jnum(jget(file, "additions"), 0);
             }
-            commits++;
+            added++;
         }
     }
-    printf("commits %ld\nlines %ld\n", b.commits + commits, b.lines + lines);
+    if (added == MAX_NEW_PER_RUN) fprintf(stderr, "fetch: %d new commits capped; rest next run\n", added);
+
+    FILE *f = fopen(LEDGER, "w");
+    if (!f) die("cannot write " LEDGER);
+    long lines = 0;
+    for (int i = 0; i < nledger; i++) {
+        fprintf(f, "%s %s %ld\n", ledger[i].date, ledger[i].sha, ledger[i].additions);
+        lines += ledger[i].additions;
+    }
+    fclose(f);
+    printf("commits %ld\nlines %ld\n", b.commits + nledger, b.lines + lines);
 }
 
 /* ------------------------------------------------------------------ ai (frozen snapshot) */
@@ -320,8 +385,8 @@ static void rebaseline(void) {
         const JVal *repos = jpath(&v, "data.user.contributionsCollection.commitContributionsByRepository");
         for (size_t i = 0; repos && i < repos->n; i++) {
             const JVal *r = jat(repos, i);
-            int is_paint = !strcmp(jstr(jpath(r, "repository.name")), EXCLUDED_REPO) &&
-                           !strcmp(jstr(jpath(r, "repository.owner.login")), USER_LOGIN);
+            const char *rn = jstr(jpath(r, "repository.name")), *ro = jstr(jpath(r, "repository.owner.login"));
+            int is_paint = rn && ro && !strcmp(rn, EXCLUDED_REPO) && !strcmp(ro, USER_LOGIN);
             if (!is_paint) commits += (long)jnum(jpath(r, "contributions.totalCount"), 0);
         }
     }
@@ -339,6 +404,10 @@ static void rebaseline(void) {
     if (!out) die("cannot write data/baseline.txt");
     fprintf(out, "baseline_date %s\ncommits %ld\nlines %ld\n", day, commits, lines);
     fclose(out);
+    /* The new baseline already includes every ledgered commit, so start the ledger fresh. */
+    FILE *l = fopen(LEDGER, "w");
+    if (!l) die("cannot reset " LEDGER);
+    fclose(l);
     printf("baseline_date %s\ncommits %ld\nlines %ld\n", day, commits, lines);
 }
 

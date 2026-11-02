@@ -39,7 +39,7 @@ jobs:
 
       - name: Commit if changed
         run: |
-          git add data/data.txt assets
+          git add data/data.txt data/increments.txt assets
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0

@@ -11,9 +11,6 @@ set -euo pipefail
 readonly USER_LOGIN="Vvkmnn"
 readonly NPM_AUTHOR="vvkmnn"
 readonly EXCLUDED_REPO="paint" # backdated gitfiti art; excluded from every number
-# Hand-written additions, notebooks/vendored excluded (GitHub stats/contributors sweep,
-# 2026-11-02). Too slow/flaky to recompute daily: stats endpoints return 202 for minutes.
-readonly LINES=433435
 readonly HERE="$(cd "$(dirname "$0")" && pwd)"
 readonly ROOT="$(dirname "$HERE")"
 
@@ -61,19 +58,9 @@ gh api graphql -f query="{ user(login:\"${USER_LOGIN}\"){ repositories(ownerAffi
         ($langs[] | "lang \(.lang | gsub(" "; "_")) \(.n)")
   '
 
-# ---- lifetime commits: per-year contributions, paint excluded (account created 2012).
-commits=0
-for year in $(seq 2012 "$(date -u +%Y)"); do
-  n="$(gh api graphql -f query="{ user(login:\"${USER_LOGIN}\"){ contributionsCollection(from:\"${year}-01-01T00:00:00Z\", to:\"${year}-12-31T23:59:59Z\"){
-    commitContributionsByRepository(maxRepositories:100){ repository{ name owner{ login } } contributions{ totalCount } } } } }" \
-    | jq --arg ex "$EXCLUDED_REPO" --arg me "$USER_LOGIN" \
-      '[.data.user.contributionsCollection.commitContributionsByRepository[]
-        | select((.repository.name == $ex and .repository.owner.login == $me) | not)
-        | .contributions.totalCount] | add // 0')"
-  commits=$((commits + n))
-done
-echo "commits ${commits}"
-echo "lines ${LINES}"
+# ---- owner-only numbers (commits, lines): computed on the Mac by fetch-local.sh, because
+# the workflow token can't see all contribution history and undercounts commits by ~1k.
+cat "$ROOT/data/local.txt"
 
 # ---- ai: refreshed on the Mac (data/ai.json); local usage logs don't exist on runners.
 jq -r '.[] | "model \(.maker) \(.family) \(.tokens // -1)"' "$ROOT/data/ai.json"

@@ -32,23 +32,23 @@
 <text x="0.0" y="34.0" font-size="12" fill="#545464" text-anchor="start">python</text>
 <defs><linearGradient id="c0" x1="0" x2="1"><stop offset="0" stop-color="#4d699b" stop-opacity="0"/><stop offset="1" stop-color="#4d699b" stop-opacity="0.90"/></linearGradient></defs>
 <rect class="r" style="animation-delay:0.0s" x="66.0" y="28.0" width="100.0" height="4" rx="2" fill="url(#c0)"/>
-<text x="200.0" y="34.0" font-size="11.5" fill="#8a8980" text-anchor="end" font-variant-numeric="tabular-nums">38%</text>
+<text x="200.0" y="34.0" font-size="11.5" fill="#8a8980" text-anchor="end" font-variant-numeric="tabular-nums">37%</text>
 <text x="0.0" y="52.0" font-size="12" fill="#545464" text-anchor="start">javascript</text>
 <defs><linearGradient id="c1" x1="0" x2="1"><stop offset="0" stop-color="#de9800" stop-opacity="0"/><stop offset="1" stop-color="#de9800" stop-opacity="0.90"/></linearGradient></defs>
 <rect class="r" style="animation-delay:0.1s" x="90.1" y="46.0" width="75.9" height="4" rx="2" fill="url(#c1)"/>
-<text x="200.0" y="52.0" font-size="11.5" fill="#8a8980" text-anchor="end" font-variant-numeric="tabular-nums">29%</text>
+<text x="200.0" y="52.0" font-size="11.5" fill="#8a8980" text-anchor="end" font-variant-numeric="tabular-nums">28%</text>
 <text x="0.0" y="70.0" font-size="12" fill="#545464" text-anchor="start">typescript</text>
 <defs><linearGradient id="c2" x1="0" x2="1"><stop offset="0" stop-color="#6693bf" stop-opacity="0"/><stop offset="1" stop-color="#6693bf" stop-opacity="0.90"/></linearGradient></defs>
 <rect class="r" style="animation-delay:0.2s" x="135.0" y="64.0" width="31.0" height="4" rx="2" fill="url(#c2)"/>
 <text x="200.0" y="70.0" font-size="11.5" fill="#8a8980" text-anchor="end" font-variant-numeric="tabular-nums">12%</text>
 <text x="0.0" y="88.0" font-size="12" fill="#545464" text-anchor="start">c</text>
 <defs><linearGradient id="c3" x1="0" x2="1"><stop offset="0" stop-color="#766b90" stop-opacity="0"/><stop offset="1" stop-color="#766b90" stop-opacity="0.90"/></linearGradient></defs>
-<rect class="r" style="animation-delay:0.3s" x="148.8" y="82.0" width="17.2" height="4" rx="2" fill="url(#c3)"/>
-<text x="200.0" y="88.0" font-size="11.5" fill="#8a8980" text-anchor="end" font-variant-numeric="tabular-nums">7%</text>
+<rect class="r" style="animation-delay:0.3s" x="145.3" y="82.0" width="20.7" height="4" rx="2" fill="url(#c3)"/>
+<text x="200.0" y="88.0" font-size="11.5" fill="#8a8980" text-anchor="end" font-variant-numeric="tabular-nums">8%</text>
 <text x="0.0" y="106.0" font-size="12" fill="#545464" text-anchor="start">shell</text>
 <defs><linearGradient id="c4" x1="0" x2="1"><stop offset="0" stop-color="#6f894e" stop-opacity="0"/><stop offset="1" stop-color="#6f894e" stop-opacity="0.90"/></linearGradient></defs>
-<rect class="r" style="animation-delay:0.4s" x="152.2" y="100.0" width="13.8" height="4" rx="2" fill="url(#c4)"/>
-<text x="200.0" y="106.0" font-size="11.5" fill="#8a8980" text-anchor="end" font-variant-numeric="tabular-nums">5%</text>
+<rect class="r" style="animation-delay:0.4s" x="148.8" y="100.0" width="17.2" height="4" rx="2" fill="url(#c4)"/>
+<text x="200.0" y="106.0" font-size="11.5" fill="#8a8980" text-anchor="end" font-variant-numeric="tabular-nums">6%</text>
 <text x="0.0" y="124.0" font-size="12" fill="#545464" text-anchor="start">vim script</text>
 <defs><linearGradient id="c5" x1="0" x2="1"><stop offset="0" stop-color="#6e915f" stop-opacity="0"/><stop offset="1" stop-color="#6e915f" stop-opacity="0.90"/></linearGradient></defs>
 <rect class="r" style="animation-delay:0.5s" x="152.2" y="118.0" width="13.8" height="4" rx="2" fill="url(#c5)"/>
@@ -57,7 +57,7 @@
 <defs><linearGradient id="c6" x1="0" x2="1"><stop offset="0" stop-color="#c84053" stop-opacity="0"/><stop offset="1" stop-color="#c84053" stop-opacity="0.90"/></linearGradient></defs>
 <rect class="r" style="animation-delay:0.6s" x="155.7" y="136.0" width="10.3" height="4" rx="2" fill="url(#c6)"/>
 <text x="200.0" y="142.0" font-size="11.5" fill="#8a8980" text-anchor="end" font-variant-numeric="tabular-nums">4%</text>
-<text x="200.0" y="168.0" font-size="11" fill="#8a8980" text-anchor="end">5,048 commits, 433k lines, 439 stars</text>
+<text x="200.0" y="168.0" font-size="11" fill="#8a8980" text-anchor="end">4,088 commits, 433k lines, 439 stars</text>
 </g>
 <g transform="translate(440.0,0)">
 <text x="0.0" y="11.0" font-size="10" fill="#8a8980" text-anchor="start" letter-spacing=".12em" font-weight="600">AI</text>

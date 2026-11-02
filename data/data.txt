@@ -11,7 +11,7 @@ stars 439
 forks 74
 langs_total 25
 lang Python 29
-lang JavaScript 22
+lang JavaScript 23
 lang TypeScript 9
 lang C 6
 lang Shell 5

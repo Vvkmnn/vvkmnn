@@ -1,0 +1,254 @@
+[
+ {
+  "id": "claude-opus-4-5-20251101",
+  "maker": "anthropic",
+  "tokens": 4362373074,
+  "family": "opus"
+ },
+ {
+  "id": "claude-sonnet-4-5-20250929",
+  "maker": "anthropic",
+  "tokens": 2522026270,
+  "family": "sonnet"
+ },
+ {
+  "id": "claude-haiku-4-5-20251001",
+  "maker": "anthropic",
+  "tokens": 172513866,
+  "family": "haiku"
+ },
+ {
+  "id": "claude-opus-4-6",
+  "maker": "anthropic",
+  "tokens": 449661701,
+  "family": "opus"
+ },
+ {
+  "id": "claude-opus-5",
+  "maker": "anthropic",
+  "tokens": 1253125523,
+  "family": "opus"
+ },
+ {
+  "id": "claude-sonnet-5",
+  "maker": "anthropic",
+  "tokens": 781625932,
+  "family": "sonnet"
+ },
+ {
+  "id": "claude-opus-5-5",
+  "maker": "anthropic",
+  "tokens": 3039709302,
+  "family": "opus"
+ },
+ {
+  "id": "claude-opus-4-7",
+  "maker": "anthropic",
+  "tokens": 724494784,
+  "family": "opus"
+ },
+ {
+  "id": "claude-opus-4-8",
+  "maker": "anthropic",
+  "tokens": 857071770,
+  "family": "opus"
+ },
+ {
+  "id": "claude-sonnet-4-6",
+  "maker": "anthropic",
+  "tokens": 19250524,
+  "family": "sonnet"
+ },
+ {
+  "id": "claude-fable-5-1",
+  "maker": "anthropic",
+  "tokens": 2478475504,
+  "family": "fable"
+ },
+ {
+  "id": "claude-sonnet-5-5",
+  "maker": "anthropic",
+  "tokens": 1913817903,
+  "family": "sonnet"
+ },
+ {
+  "id": "claude-haiku-5-5",
+  "maker": "anthropic",
+  "tokens": 2270117,
+  "family": "haiku"
+ },
+ {
+  "id": "claude-fable-5",
+  "maker": "anthropic",
+  "tokens": 1046431729,
+  "family": "fable"
+ },
+ {
+  "id": "gpt-5.4",
+  "maker": "openai",
+  "tokens": 18571335,
+  "family": "gpt"
+ },
+ {
+  "id": "gpt-5.3-codex",
+  "maker": "openai",
+  "tokens": 0,
+  "family": "gpt"
+ },
+ {
+  "id": "gpt-5.6-sol",
+  "maker": "openai",
+  "tokens": 23914240,
+  "family": "gpt"
+ },
+ {
+  "id": "gpt-5.5",
+  "maker": "openai",
+  "tokens": 74184463,
+  "family": "gpt"
+ },
+ {
+  "id": "gpt-6-astra",
+  "maker": "openai",
+  "tokens": 269162,
+  "family": "gpt"
+ },
+ {
+  "id": "gemma-4-31b-it",
+  "maker": "google",
+  "tokens": 31,
+  "family": "gemma"
+ },
+ {
+  "id": "nemotron-3-ultra-550b-a55b",
+  "maker": "nvidia",
+  "tokens": 8122,
+  "family": "nemotron"
+ },
+ {
+  "id": "whisper-large-v3-turbo",
+  "maker": "openai",
+  "tokens": null,
+  "family": "whisper"
+ },
+ {
+  "id": "qwen3-4b-instruct",
+  "maker": "alibaba",
+  "tokens": null,
+  "family": "qwen"
+ },
+ {
+  "id": "soprano-80m",
+  "maker": "alibaba",
+  "tokens": null,
+  "family": "soprano"
+ },
+ {
+  "id": "claude-3-sonnet",
+  "maker": "anthropic",
+  "tokens": null,
+  "family": "sonnet"
+ },
+ {
+  "id": "claude-haiku-3-5",
+  "maker": "anthropic",
+  "tokens": null,
+  "family": "haiku"
+ },
+ {
+  "id": "gpt-4-turbo",
+  "maker": "openai",
+  "tokens": null,
+  "family": "gpt"
+ },
+ {
+  "id": "gpt-4o",
+  "maker": "openai",
+  "tokens": null,
+  "family": "gpt"
+ },
+ {
+  "id": "gpt-4o-mini",
+  "maker": "openai",
+  "tokens": null,
+  "family": "gpt"
+ },
+ {
+  "id": "gpt-3.5-turbo",
+  "maker": "openai",
+  "tokens": null,
+  "family": "gpt"
+ },
+ {
+  "id": "gemini-2.5-flash",
+  "maker": "google",
+  "tokens": null,
+  "family": "gemini"
+ },
+ {
+  "id": "inception-v3",
+  "maker": "google",
+  "tokens": null,
+  "family": "inception"
+ },
+ {
+  "id": "xception",
+  "maker": "google",
+  "tokens": null,
+  "family": "inception"
+ },
+ {
+  "id": "llama-3.3-70b",
+  "maker": "meta",
+  "tokens": null,
+  "family": "llama"
+ },
+ {
+  "id": "deepseek-chat",
+  "maker": "deepseek",
+  "tokens": null,
+  "family": "deepseek"
+ },
+ {
+  "id": "deepseek-r1",
+  "maker": "deepseek",
+  "tokens": null,
+  "family": "deepseek"
+ },
+ {
+  "id": "qwen3-coder",
+  "maker": "alibaba",
+  "tokens": null,
+  "family": "qwen"
+ },
+ {
+  "id": "qwen3-8b",
+  "maker": "alibaba",
+  "tokens": null,
+  "family": "qwen"
+ },
+ {
+  "id": "qwen3.5-9b",
+  "maker": "alibaba",
+  "tokens": null,
+  "family": "qwen"
+ },
+ {
+  "id": "vgg16",
+  "maker": "oxford",
+  "tokens": null,
+  "family": "vgg"
+ },
+ {
+  "id": "vgg19",
+  "maker": "oxford",
+  "tokens": null,
+  "family": "vgg"
+ },
+ {
+  "id": "resnet50",
+  "maker": "microsoft",
+  "tokens": null,
+  "family": "resnet"
+ }
+]

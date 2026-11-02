@@ -32,32 +32,32 @@
 <text x="0.0" y="34.0" font-size="12" fill="#DCD7BA" text-anchor="start">python</text>
 <defs><linearGradient id="c0" x1="0" x2="1"><stop offset="0" stop-color="#7E9CD8" stop-opacity="0"/><stop offset="1" stop-color="#7E9CD8" stop-opacity="0.85"/></linearGradient></defs>
 <rect class="r" style="animation-delay:0.0s" x="76.0" y="28.0" width="280.0" height="4" rx="2" fill="url(#c0)"/>
-<text x="390.0" y="34.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">38%</text>
+<text x="390.0" y="34.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">37%</text>
 <text x="0.0" y="52.0" font-size="12" fill="#DCD7BA" text-anchor="start">javascript</text>
 <defs><linearGradient id="c1" x1="0" x2="1"><stop offset="0" stop-color="#E6C384" stop-opacity="0"/><stop offset="1" stop-color="#E6C384" stop-opacity="0.85"/></linearGradient></defs>
-<rect class="r" style="animation-delay:0.1s" x="143.6" y="46.0" width="212.4" height="4" rx="2" fill="url(#c1)"/>
+<rect class="r" style="animation-delay:0.1s" x="136.0" y="46.0" width="220.0" height="4" rx="2" fill="url(#c1)"/>
 <text x="390.0" y="52.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">29%</text>
 <text x="0.0" y="70.0" font-size="12" fill="#DCD7BA" text-anchor="start">typescript</text>
 <defs><linearGradient id="c2" x1="0" x2="1"><stop offset="0" stop-color="#7FB4CA" stop-opacity="0"/><stop offset="1" stop-color="#7FB4CA" stop-opacity="0.85"/></linearGradient></defs>
-<rect class="r" style="animation-delay:0.2s" x="269.1" y="64.0" width="86.9" height="4" rx="2" fill="url(#c2)"/>
+<rect class="r" style="animation-delay:0.2s" x="266.0" y="64.0" width="90.0" height="4" rx="2" fill="url(#c2)"/>
 <text x="390.0" y="70.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">12%</text>
 <text x="0.0" y="88.0" font-size="12" fill="#DCD7BA" text-anchor="start">c</text>
 <defs><linearGradient id="c3" x1="0" x2="1"><stop offset="0" stop-color="#938AA9" stop-opacity="0"/><stop offset="1" stop-color="#938AA9" stop-opacity="0.85"/></linearGradient></defs>
-<rect class="r" style="animation-delay:0.3s" x="298.1" y="82.0" width="57.9" height="4" rx="2" fill="url(#c3)"/>
+<rect class="r" style="animation-delay:0.3s" x="296.0" y="82.0" width="60.0" height="4" rx="2" fill="url(#c3)"/>
 <text x="390.0" y="88.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">8%</text>
 <text x="0.0" y="106.0" font-size="12" fill="#DCD7BA" text-anchor="start">shell</text>
 <defs><linearGradient id="c4" x1="0" x2="1"><stop offset="0" stop-color="#98BB6C" stop-opacity="0"/><stop offset="1" stop-color="#98BB6C" stop-opacity="0.85"/></linearGradient></defs>
-<rect class="r" style="animation-delay:0.4s" x="317.4" y="100.0" width="38.6" height="4" rx="2" fill="url(#c4)"/>
+<rect class="r" style="animation-delay:0.4s" x="316.0" y="100.0" width="40.0" height="4" rx="2" fill="url(#c4)"/>
 <text x="390.0" y="106.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">5%</text>
 <text x="0.0" y="124.0" font-size="12" fill="#DCD7BA" text-anchor="start">vim script</text>
 <defs><linearGradient id="c5" x1="0" x2="1"><stop offset="0" stop-color="#76946A" stop-opacity="0"/><stop offset="1" stop-color="#76946A" stop-opacity="0.85"/></linearGradient></defs>
-<rect class="r" style="animation-delay:0.5s" x="317.4" y="118.0" width="38.6" height="4" rx="2" fill="url(#c5)"/>
+<rect class="r" style="animation-delay:0.5s" x="316.0" y="118.0" width="40.0" height="4" rx="2" fill="url(#c5)"/>
 <text x="390.0" y="124.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">5%</text>
 <text x="0.0" y="142.0" font-size="12" fill="#DCD7BA" text-anchor="start">ruby</text>
 <defs><linearGradient id="c6" x1="0" x2="1"><stop offset="0" stop-color="#E46876" stop-opacity="0"/><stop offset="1" stop-color="#E46876" stop-opacity="0.85"/></linearGradient></defs>
-<rect class="r" style="animation-delay:0.6s" x="327.0" y="136.0" width="29.0" height="4" rx="2" fill="url(#c6)"/>
+<rect class="r" style="animation-delay:0.6s" x="326.0" y="136.0" width="30.0" height="4" rx="2" fill="url(#c6)"/>
 <text x="390.0" y="142.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">4%</text>
-<text x="390.0" y="168.0" font-size="11" fill="#727169" text-anchor="end">5,050 commits, 433k lines, 439 stars</text>
+<text x="390.0" y="168.0" font-size="11" fill="#727169" text-anchor="end">3,721 commits, 432k lines, 439 stars</text>
 </g>
 <g transform="translate(0.0,376)">
 <text x="0.0" y="11.0" font-size="10" fill="#727169" text-anchor="start" letter-spacing=".12em" font-weight="600">AI</text>

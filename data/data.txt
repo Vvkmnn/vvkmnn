@@ -10,7 +10,7 @@ pkg vigil 584 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 stars 439
 forks 74
 langs_total 25
-lang Python 29
+lang Python 28
 lang JavaScript 22
 lang TypeScript 9
 lang C 6
@@ -35,8 +35,8 @@ lang Perl 1
 lang Prolog 1
 lang R 1
 lang Rust 1
-commits 5050
-lines 433435
+commits 3721
+lines 432098
 model anthropic opus 4362373074
 model anthropic sonnet 2522026270
 model anthropic haiku 172513866

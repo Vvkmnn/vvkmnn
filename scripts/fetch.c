@@ -15,7 +15,7 @@
  *   model MAKER FAMILY TOKENS  (TOKENS = -1 when no usage was logged)
  *
  * Commits + lines = baseline + increment. The baseline was computed with the owner's login
- * (full contribution history, paint excluded). The workflow token can't see all history
+ * (full contribution history, generated-activity repos excluded). The workflow token can't see all history
  * (org repos are hidden; ~1k commits short), so Actions only ADDS what it can see after
  * baseline_date: public commits authored by the user (commit search, default branches)
  * and the additions in them, skipping notebooks, lockfiles, minified files and SVGs (so
@@ -39,7 +39,16 @@
 
 #define USER_LOGIN "Vvkmnn"
 #define NPM_AUTHOR "vvkmnn"
-#define EXCLUDED_REPO "paint" /* backdated gitfiti art; excluded from every number */
+/* Generated-activity repos, excluded from every number (they are not real work):
+ *   paint  backdated gitfiti art on the contribution graph
+ *   d      formerly "decoy": ghdecoy generator, 1,336 identical "ghdecoy" commits */
+static const char *const EXCLUDED_REPOS[] = { "paint", "d" };
+
+static int is_excluded(const char *name) {
+    for (size_t i = 0; i < sizeof EXCLUDED_REPOS / sizeof *EXCLUDED_REPOS; i++)
+        if (name && !strcmp(name, EXCLUDED_REPOS[i])) return 1;
+    return 0;
+}
 #define LEGACY_PACKAGE "claude-historian" /* original name of historian-mcp; merged into it */
 #define FIRST_YEAR 2012                   /* account creation year */
 
@@ -215,7 +224,7 @@ static void repos(void) {
     for (size_t i = 0; i < nodes->n; i++) {
         const JVal *r = jat(nodes, i);
         const char *rname = jstr(jget(r, "name"));
-        if (!rname || !strcmp(rname, EXCLUDED_REPO)) continue; /* malformed or paint */
+        if (!rname || is_excluded(rname)) continue; /* malformed or generated activity */
         stars += (long)jnum(jget(r, "stargazerCount"), 0);
         forks += (long)jnum(jget(r, "forkCount"), 0);
         const JVal *ls = jpath(r, "languages.nodes");
@@ -353,8 +362,9 @@ static void commits_and_lines(void) {
     JVal pages;
     if (!jparse_all(run("gh api -X GET search/commits --paginate -f per_page=100 "
                         "-f sort=committer-date -f order=asc "
-                        "-f q='author:%s committer-date:%s%s -repo:%s/%s'",
-                        USER_LOGIN, op, safe(since), USER_LOGIN, EXCLUDED_REPO), &pages))
+                        "-f q='author:%s committer-date:%s%s -repo:%s/%s -repo:%s/%s'",
+                        USER_LOGIN, op, safe(since), USER_LOGIN, EXCLUDED_REPOS[0],
+                        USER_LOGIN, EXCLUDED_REPOS[1]), &pages))
         die("invalid JSON from commit search");
 
     int added = 0;
@@ -430,16 +440,17 @@ static void rebaseline(void) {
         for (size_t i = 0; repos && i < repos->n; i++) {
             const JVal *r = jat(repos, i);
             const char *rn = jstr(jpath(r, "repository.name")), *ro = jstr(jpath(r, "repository.owner.login"));
-            int is_paint = rn && ro && !strcmp(rn, EXCLUDED_REPO) && !strcmp(ro, USER_LOGIN);
-            if (!is_paint) commits += (long)jnum(jpath(r, "contributions.totalCount"), 0);
+            int generated = rn && ro && is_excluded(rn) && !strcmp(ro, USER_LOGIN);
+            if (!generated) commits += (long)jnum(jpath(r, "contributions.totalCount"), 0);
         }
     }
     long lines = -1;
     FILE *d = fopen("data/data.txt", "r");
-    char key[32];
+    /* Line by line: pkg records ("pkg NAME ...") would derail a single fscanf pattern. */
+    static char line[1 << 16];
     long val;
-    while (d && fscanf(d, "%31s %ld%*[^\n]", key, &val) == 2)
-        if (!strcmp(key, "lines")) lines = val;
+    while (d && fgets(line, sizeof line, d))
+        if (sscanf(line, "lines %ld", &val) == 1) lines = val;
     if (d) fclose(d);
     if (lines < 0) die("no lines record in data/data.txt to carry forward");
     char day[11];

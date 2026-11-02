@@ -189,7 +189,7 @@ static void code_col(FILE *f, double w, const Theme *t) {
         const Lang *l = &D.langs[i];
         double y = ROW_TOP + i * PITCH, share = l->repos / total, x0 = x1 - share / max * span;
         const char *c = HUE(LANG_HUES, l->name, t);
-        char lower[32], pct[8];
+        char lower[32], pct[16];
         size_t j = 0;
         for (; l->name[j] && j < sizeof lower - 1; j++) lower[j] = (char)tolower((unsigned char)l->name[j]);
         lower[j] = '\0';
@@ -267,7 +267,7 @@ static void ai_col(FILE *f, double w, const Theme *t) {
                     cx - side / 2, y - side / 2, side, side, HUE(FAMILY_HUES, m->family, t), t->mark);
         }
         fprintf(f, "</g>\n");
-        char v[8];
+        char v[16];
         snprintf(v, sizeof v, "%d", mk[r].n);
         text(f, w, y + 4, v, t->muted, 11.5, "end", " font-variant-numeric=\"tabular-nums\"");
     }
@@ -286,7 +286,7 @@ typedef enum { DESKTOP, TABLET, PHONE } Layout;
 static const char *LAYOUT_NAMES[] = { "desktop", "tablet", "phone" };
 
 static void card(const char *dir, Layout layout, const Theme *t) {
-    char path[512], a[32], b[32], c[32], stats[3][96];
+    char path[512], a[32], b[32], c[32], stats[3][160];
     snprintf(path, sizeof path, "%s/card-%s-%s.svg", dir, LAYOUT_NAMES[layout], t->dark ? "dark" : "light");
     FILE *f = fopen(path, "w");
     if (!f) die("cannot write card svg");

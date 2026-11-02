@@ -95,6 +95,18 @@ static void utc_date(char out[11], int days_ahead) {
 
 static void today(char out[11]) { utc_date(out, 0); }
 
+/** The calendar day before `date` (YYYY-MM-DD); noon avoids DST edge cases in mktime. */
+static void day_before(const char *date, char out[11]) {
+    struct tm tm = { 0 };
+    tm.tm_year = atoi(date) - 1900;
+    tm.tm_mon = atoi(date + 5) - 1;
+    tm.tm_mday = atoi(date + 8) - 1;
+    tm.tm_hour = 12;
+    tm.tm_isdst = -1;
+    mktime(&tm);
+    strftime(out, 11, "%Y-%m-%d", &tm);
+}
+
 /* ------------------------------------------------------------------ npm */
 typedef struct { char name[64]; long total; int ndays; long days[MAX_DAYS]; } Pkg;
 static Pkg pkgs[MAX_PKGS];
@@ -330,6 +342,13 @@ static void commits_and_lines(void) {
             since = ledger[i].date;
             op = ">=";
         }
+    /* Ledger dates are committer-local (up to a day ahead of UTC) but search filters in UTC,
+     * so step the resume day back one day; already-ledgered SHAs are skipped anyway. */
+    char resume[11];
+    if (!strcmp(op, ">=")) {
+        day_before(since, resume);
+        since = resume;
+    }
 
     JVal pages;
     if (!jparse_all(run("gh api -X GET search/commits --paginate -f per_page=100 "

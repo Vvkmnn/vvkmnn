@@ -85,12 +85,15 @@ static const char *safe(const char *s) {
     return s;
 }
 
-static void today(char out[11]) {
-    time_t now = time(NULL);
+/** UTC date `days_ahead` days from now, as YYYY-MM-DD. */
+static void utc_date(char out[11], int days_ahead) {
+    time_t t = time(NULL) + (time_t)days_ahead * 86400;
     struct tm tm;
-    gmtime_r(&now, &tm);
+    gmtime_r(&t, &tm);
     strftime(out, 11, "%Y-%m-%d", &tm);
 }
+
+static void today(char out[11]) { utc_date(out, 0); }
 
 /* ------------------------------------------------------------------ npm */
 typedef struct { char name[64]; long total; int ndays; long days[MAX_DAYS]; } Pkg;
@@ -284,12 +287,22 @@ typedef struct { char date[11]; char sha[41]; long additions; } Entry;
 static Entry ledger[MAX_LEDGER];
 static int nledger;
 
-static void read_ledger(void) {
+/** Exactly "YYYY-MM-DD" (digits and dashes in place); anything else is rejected. */
+static int is_date(const char *s) {
+    if (!s) return 0;
+    for (int i = 0; i < 10; i++)
+        if (i == 4 || i == 7 ? s[i] != '-' : (s[i] < '0' || s[i] > '9')) return 0;
+    return 1;
+}
+
+/** Loads the ledger, dropping malformed or future-dated lines (they are not rewritten). */
+static void read_ledger(const char *now) {
     FILE *f = fopen(LEDGER, "r");
     if (!f) return; /* first run: no ledger yet */
-    while (nledger < MAX_LEDGER && fscanf(f, "%10s %40s %ld", ledger[nledger].date, ledger[nledger].sha,
-                                          &ledger[nledger].additions) == 3)
-        nledger++;
+    Entry e;
+    while (nledger < MAX_LEDGER && fscanf(f, "%10s %40s %ld", e.date, e.sha, &e.additions) == 3)
+        if (is_date(e.date) && strcmp(e.date, now) <= 0 && strlen(e.sha) == 40 && e.additions >= 0)
+            ledger[nledger++] = e;
     fclose(f);
 }
 
@@ -301,11 +314,22 @@ static int in_ledger(const char *sha) {
 
 static void commits_and_lines(void) {
     Baseline b = read_baseline();
-    read_ledger();
-    /* Resume from the newest counted day (inclusive; dedupe handles overlap), else after baseline. */
+    /* Committer dates are written in the committer's local timezone (up to UTC+14), so a
+     * genuine commit can read as "tomorrow" in UTC. The latest acceptable date is therefore
+     * tomorrow (UTC); anything later is spoofed or clock-skewed. */
+    char now[11];
+    utc_date(now, 1);
+    read_ledger(now);
+    /* Resume from the newest counted day (inclusive; dedupe handles overlap), else after the
+     * baseline. Committer dates are author-controlled, so the resume day is clamped to that
+     * limit and future-dated commits never enter the ledger: one fake "2099" commit must not
+     * be able to push the cursor past every real commit. */
     const char *since = b.date, *op = ">";
     for (int i = 0; i < nledger; i++)
-        if (strcmp(ledger[i].date, since) >= 0) { since = ledger[i].date; op = ">="; }
+        if (is_date(ledger[i].date) && strcmp(ledger[i].date, now) <= 0 && strcmp(ledger[i].date, since) >= 0) {
+            since = ledger[i].date;
+            op = ">=";
+        }
 
     JVal pages;
     if (!jparse_all(run("gh api -X GET search/commits --paginate -f per_page=100 "
@@ -321,7 +345,8 @@ static void commits_and_lines(void) {
             const JVal *it = jat(items, i);
             const char *sha = jstr(jget(it, "sha")), *repo = jstr(jpath(it, "repository.full_name"));
             const char *when = jstr(jpath(it, "commit.committer.date"));
-            if (!sha || !repo || !when || strlen(sha) != 40 || strlen(when) < 10) continue; /* malformed */
+            if (!sha || !repo || strlen(sha) != 40 || !is_date(when)) continue; /* malformed */
+            if (strncmp(when, now, 10) > 0) continue; /* future-dated: spoofed or clock-skewed */
             if (in_ledger(sha)) continue;
             if (nledger == MAX_LEDGER) die("ledger full");
             JVal c;

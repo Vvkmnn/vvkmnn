@@ -1,6 +1,8 @@
-# Refreshes the profile card daily: fetch.sh pulls live numbers (npm + GitHub, all public,
-# so the built-in token is enough), card.c renders the SVGs, and the bot commits only if
-# something changed. data/ai.json is refreshed from the Mac (local usage logs only).
+# Refreshes the profile card daily, all in C (scripts/*.c, no libraries):
+#   fetch  pulls live numbers via the gh/curl CLIs (npm + GitHub, all public, so the
+#          built-in token is enough) and adds post-baseline commit increments
+#   card   renders the SVGs
+# The bot commits only if something changed. data/ai.json is a frozen snapshot (see ai.c).
 name: refresh
 
 on:
@@ -22,15 +24,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Build
+        run: |
+          cc -std=c11 -O2 -Wall -Wextra -Werror -o fetch scripts/fetch.c -lm
+          cc -std=c11 -O2 -Wall -Wextra -Werror -o card scripts/card.c -lm
+
       - name: Fetch live numbers
         env:
           GH_TOKEN: ${{ github.token }}
-        run: scripts/fetch.sh > data/data.txt
+        run: ./fetch > data/data.txt
 
       - name: Render card
-        run: |
-          cc -std=c11 -O2 -Wall -Wextra -Werror -o card scripts/card.c -lm
-          ./card data/data.txt assets
+        run: ./card data/data.txt assets
 
       - name: Commit if changed
         run: |

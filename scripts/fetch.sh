@@ -58,9 +58,35 @@ gh api graphql -f query="{ user(login:\"${USER_LOGIN}\"){ repositories(ownerAffi
         ($langs[] | "lang \(.lang | gsub(" "; "_")) \(.n)")
   '
 
-# ---- owner-only numbers (commits, lines): computed on the Mac by fetch-local.sh, because
-# the workflow token can't see all contribution history and undercounts commits by ~1k.
-cat "$ROOT/data/local.txt"
+# ---- commits + lines: baseline + increment.
+# The baseline (data/baseline.txt) was computed once with the owner's own login by
+# fetch-local.sh: full contribution history, paint excluded. Actions can't recompute it,
+# because the workflow token can't see all history (org repos hidden; ~1k commits short).
+# So Actions adds only what it CAN see from the day after the baseline onward:
+#   commits += public commits authored by the user (commit search, default branches only)
+#   lines   += additions in those commits, skipping notebooks, lockfiles, minified files
+#              and SVGs (so regenerated card assets never count as written code)
+# Known gaps, accepted: commits to private repos and non-default branches after the
+# baseline aren't counted. To re-anchor exactly, run scripts/fetch-local.sh on the Mac
+# (rewrites the baseline) and push.
+baseline_date="$(awk '$1 == "baseline_date" {print $2}' "$ROOT/data/baseline.txt")"
+base_commits="$(awk '$1 == "commits" {print $2}' "$ROOT/data/baseline.txt")"
+base_lines="$(awk '$1 == "lines" {print $2}' "$ROOT/data/baseline.txt")"
+
+new_commits=0
+new_lines=0
+while read -r repo sha; do
+  [ -n "$sha" ] || continue
+  added="$(gh api "repos/${repo}/commits/${sha}" --jq \
+    '[.files[]? | select(.filename | test("\\.ipynb$|lock\\.json$|\\.lock$|\\.min\\.|\\.svg$") | not) | .additions] | add // 0')"
+  new_commits=$((new_commits + 1))
+  new_lines=$((new_lines + added))
+done < <(gh api -X GET search/commits --paginate \
+  -f q="author:${USER_LOGIN} committer-date:>${baseline_date} -repo:${USER_LOGIN}/${EXCLUDED_REPO}" \
+  -f per_page=100 --jq '.items[] | "\(.repository.full_name) \(.sha)"')
+
+echo "commits $((base_commits + new_commits))"
+echo "lines $((base_lines + new_lines))"
 
 # ---- ai: refreshed on the Mac (data/ai.json); local usage logs don't exist on runners.
 jq -r '.[] | "model \(.maker) \(.family) \(.tokens // -1)"' "$ROOT/data/ai.json"

@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
-# Owner-only numbers, run on the Mac (needs `gh` logged in as Vvkmnn). Writes data/local.txt.
-# Why not in Actions: the workflow's GITHUB_TOKEN can't see all contribution history
-# (org repos are hidden from it), so lifetime commits come out ~1k too low there.
+# OPTIONAL re-anchor of the commits/lines baseline. Not part of the daily automation.
+#
+# Run on the Mac with `gh` logged in as Vvkmnn, then commit + push data/baseline.txt.
+# The daily Action (fetch.sh) then counts increments from the new baseline_date.
+#
+# Why this exists: the workflow's GITHUB_TOKEN can't see all contribution history
+# (org repos are hidden from it), so lifetime commits come out ~1k too low in Actions.
+# Your own login sees everything, so the exact lifetime number is computed here.
+#
+# LINES is NOT recomputed here: it came from a one-off GitHub stats/contributors sweep on
+# 2026-11-02 (hand-written additions, notebook-heavy and vendored repos excluded). That
+# endpoint returns 202 "computing" for minutes per repo, so it isn't scripted. Re-anchoring
+# keeps lines = previous baseline + whatever fetch.sh last counted since then.
 set -euo pipefail
 
 readonly USER_LOGIN="Vvkmnn"
 readonly EXCLUDED_REPO="paint" # backdated gitfiti art; excluded from every number
-# Hand-written additions, notebooks/vendored excluded (stats/contributors sweep, 2026-11-02).
-readonly LINES=433435
 readonly ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+readonly BASELINE="$ROOT/data/baseline.txt"
 
 commits=0
 for year in $(seq 2012 "$(date -u +%Y)"); do
@@ -21,5 +30,8 @@ for year in $(seq 2012 "$(date -u +%Y)"); do
   commits=$((commits + n))
 done
 
-printf 'commits %s\nlines %s\n' "$commits" "$LINES" > "$ROOT/data/local.txt"
-cat "$ROOT/data/local.txt"
+# Carry lines forward from the last rendered total (baseline + counted increments).
+lines="$(awk '$1 == "lines" {print $2}' "$ROOT/data/data.txt")"
+
+printf 'baseline_date %s\ncommits %s\nlines %s\n' "$(date -u +%F)" "$commits" "$lines" > "$BASELINE"
+cat "$BASELINE"

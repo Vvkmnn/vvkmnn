@@ -32,23 +32,23 @@
 <text x="0.0" y="34.0" font-size="12" fill="#DCD7BA" text-anchor="start">python</text>
 <defs><linearGradient id="c0" x1="0" x2="1"><stop offset="0" stop-color="#7E9CD8" stop-opacity="0"/><stop offset="1" stop-color="#7E9CD8" stop-opacity="0.85"/></linearGradient></defs>
 <rect class="r" style="animation-delay:0.0s" x="76.0" y="28.0" width="280.0" height="4" rx="2" fill="url(#c0)"/>
-<text x="390.0" y="34.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">37%</text>
+<text x="390.0" y="34.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">38%</text>
 <text x="0.0" y="52.0" font-size="12" fill="#DCD7BA" text-anchor="start">javascript</text>
 <defs><linearGradient id="c1" x1="0" x2="1"><stop offset="0" stop-color="#E6C384" stop-opacity="0"/><stop offset="1" stop-color="#E6C384" stop-opacity="0.85"/></linearGradient></defs>
-<rect class="r" style="animation-delay:0.1s" x="133.9" y="46.0" width="222.1" height="4" rx="2" fill="url(#c1)"/>
+<rect class="r" style="animation-delay:0.1s" x="143.6" y="46.0" width="212.4" height="4" rx="2" fill="url(#c1)"/>
 <text x="390.0" y="52.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">29%</text>
 <text x="0.0" y="70.0" font-size="12" fill="#DCD7BA" text-anchor="start">typescript</text>
 <defs><linearGradient id="c2" x1="0" x2="1"><stop offset="0" stop-color="#7FB4CA" stop-opacity="0"/><stop offset="1" stop-color="#7FB4CA" stop-opacity="0.85"/></linearGradient></defs>
 <rect class="r" style="animation-delay:0.2s" x="269.1" y="64.0" width="86.9" height="4" rx="2" fill="url(#c2)"/>
-<text x="390.0" y="70.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">11%</text>
+<text x="390.0" y="70.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">12%</text>
 <text x="0.0" y="88.0" font-size="12" fill="#DCD7BA" text-anchor="start">c</text>
 <defs><linearGradient id="c3" x1="0" x2="1"><stop offset="0" stop-color="#938AA9" stop-opacity="0"/><stop offset="1" stop-color="#938AA9" stop-opacity="0.85"/></linearGradient></defs>
 <rect class="r" style="animation-delay:0.3s" x="298.1" y="82.0" width="57.9" height="4" rx="2" fill="url(#c3)"/>
 <text x="390.0" y="88.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">8%</text>
 <text x="0.0" y="106.0" font-size="12" fill="#DCD7BA" text-anchor="start">shell</text>
 <defs><linearGradient id="c4" x1="0" x2="1"><stop offset="0" stop-color="#98BB6C" stop-opacity="0"/><stop offset="1" stop-color="#98BB6C" stop-opacity="0.85"/></linearGradient></defs>
-<rect class="r" style="animation-delay:0.4s" x="307.7" y="100.0" width="48.3" height="4" rx="2" fill="url(#c4)"/>
-<text x="390.0" y="106.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">6%</text>
+<rect class="r" style="animation-delay:0.4s" x="317.4" y="100.0" width="38.6" height="4" rx="2" fill="url(#c4)"/>
+<text x="390.0" y="106.0" font-size="11.5" fill="#727169" text-anchor="end" font-variant-numeric="tabular-nums">5%</text>
 <text x="0.0" y="124.0" font-size="12" fill="#DCD7BA" text-anchor="start">vim script</text>
 <defs><linearGradient id="c5" x1="0" x2="1"><stop offset="0" stop-color="#76946A" stop-opacity="0"/><stop offset="1" stop-color="#76946A" stop-opacity="0.85"/></linearGradient></defs>
 <rect class="r" style="animation-delay:0.5s" x="317.4" y="118.0" width="38.6" height="4" rx="2" fill="url(#c5)"/>
